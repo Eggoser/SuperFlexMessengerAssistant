@@ -3,38 +3,12 @@ import 'firebase/auth'
 import 'firebase/firestore'
 
 import Filter from 'bad-words'
-import { ref, onUnmounted, computed } from 'vue'
+import { ref, onUnmounted } from 'vue'
 
-firebase.initializeApp({
-    apiKey: "AIzaSyASdoY79gcrVOtqazDvi7HHX_EK1bTeYnE",
-    authDomain: "chat-levkovo.firebaseapp.com",
-    projectId: "chat-levkovo",
-    storageBucket: "chat-levkovo.appspot.com",
-    messagingSenderId: "226695678832",
-    appId: "1:226695678832:web:173f235245a232daf71db5",
-    measurementId: "G-P558HHGX3P"
-})
-
-const auth = firebase.auth()
-
-export function useAuth() {
-    const user = ref(null)
-    const unsubscribe = auth.onAuthStateChanged(_user => (user.value = _user))
-    onUnmounted(unsubscribe)
-    const isLogin = computed(() => user.value !== null)
-
-    const signIn = async () => {
-        const googleProvider = new firebase.auth.GoogleAuthProvider()
-        await auth.signInWithPopup(googleProvider)
-    }
-    const signOut = () => auth.signOut()
-
-    return { user, isLogin, signIn, signOut }
-}
-
-const firestore = firebase.firestore()
-const messagesCollection = firestore.collection('messages')
-const messagesQuery = messagesCollection.orderBy('createdAt', 'desc').limit(100)
+//
+// const firestore = firebase.firestore()
+// const messagesCollection = firestore.collection('messages')
+// const messagesQuery = messagesCollection.orderBy('createdAt', 'desc').limit(100)
 const filter = new Filter()
 
 export function useChat() {
@@ -44,6 +18,7 @@ export function useChat() {
             .map(doc => ({ id: doc.id, ...doc.data() }))
             .reverse()
     })
+
     onUnmounted(unsubscribe)
 
     const { user, isLogin } = useAuth()
@@ -58,6 +33,8 @@ export function useChat() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         })
     }
+
+    console.log(messages.value)
 
     return { messages, sendMessage }
 }

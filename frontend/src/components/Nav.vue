@@ -19,7 +19,7 @@
 
 <script>
 import Avatar from './Avatar.vue'
-import { useAuth } from '@/firebase'
+import {useAuth} from '@/compositions/useAuth'
 
 export default {
     components: { Avatar },
