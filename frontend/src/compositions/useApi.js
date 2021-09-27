@@ -1,6 +1,6 @@
 import axios from "axios"
 import { ref } from 'vue'
-import {UserModule} from '@/modules/userModule'
+import {UserModule} from '@/store/user'
 
 
 export function useApi(
@@ -14,9 +14,6 @@ export function useApi(
         withCredentials: true,
         maxRedirects: 0,
         headers: {
-            // "Access-Control-Allow-Origin": "*",
-            // "Access-Control-Allow-Methods": "*",
-            // "Access-Control-Allow-Headers": "*",
             "Content-type": "application/json; charset=UTF-8"
         }
     })

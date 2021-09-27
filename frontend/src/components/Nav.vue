@@ -3,8 +3,8 @@
         <div>
             <h1><strong>Vue</strong> Chat App</h1>
 
-            <div v-if="isLogin" class="login">
-                <Avatar :src="user.photoURL" />
+            <div v-if="UserModule.user" class="login">
+                <Avatar :src="UserModule.user.avatarUrl" />
                 <button class="text-gray-400 hover:text-white" @click="signOut">
                     Sign Out
                 </button>
@@ -19,13 +19,15 @@
 
 <script>
 import Avatar from './Avatar.vue'
+import {UserModule} from '@/store/user'
 import {useAuth} from '@/compositions/useAuth'
+
 
 export default {
     components: { Avatar },
     setup() {
-        const { user, isLogin, signOut, signIn } = useAuth()
-        return { user, isLogin, signOut, signIn }
+        const { signIn } = useAuth()
+        return { signIn, UserModule }
     }
 }
 </script>

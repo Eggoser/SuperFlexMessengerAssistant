@@ -1,7 +1,8 @@
 import firebase from 'firebase'
 import {useApi} from '@/compositions/useApi'
-import {UserModule} from '@/store/user'
-import { ref, onUnmounted, computed } from 'vue'
+// import {UserModule} from '@/store/user'
+import { ref, onUnmounted, computed, watch } from 'vue'
+import { UserModule } from '@/store/user'
 
 
 firebase.initializeApp({
@@ -15,14 +16,13 @@ firebase.initializeApp({
 })
 
 const auth = firebase.auth()
+const loginSuccess = ref(false)
 
 const sendAuthData = async function(_user) {
     if (_user){
-        UserModule.setUser(_user)
-
-        const { Aa } = UserModule.user
-
-        if (store.state.authToken) {
+        const {Aa} = _user
+        console.log(UserModule.token)
+        if (!UserModule.token) {
             const { exec, result, error } = useApi({
                 method: 'POST',
                 url: '/auth/login',
@@ -33,7 +33,9 @@ const sendAuthData = async function(_user) {
                     'content-type': 'application/json'
                 }
             }, {}, (data) => {
-                UserModule.login()
+                UserModule.setTokenCookie(data.data)
+                UserModule.init()
+                // console.log(UserModule.token)
             })
             await exec()
         }
@@ -41,17 +43,9 @@ const sendAuthData = async function(_user) {
 }
 
 
-const getUserData = async function(){
-    const {exec, result, error} = useApi({
-        method: 'GET',
-        url: '/auth/login',
-        // data: _user
-    })
-    await exec()
-}
-
-
 export function useAuth() {
+
+
     auth.onAuthStateChanged(async (_user) => {
         await sendAuthData(_user)
     })
@@ -59,10 +53,13 @@ export function useAuth() {
     const signIn = async () => {
         const googleProvider = new firebase.auth.GoogleAuthProvider()
         await auth.signInWithPopup(googleProvider)
-        await auth.signOut()
+
+        watch(loginSuccess, () => {
+            console.log("logout")
+            auth.signOut()
+        })
+
     }
 
-    const signOut = () => auth.signOut()
-
-    return { signIn, signOut }
+    return { signIn }
 }
