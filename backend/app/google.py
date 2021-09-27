@@ -3,25 +3,48 @@ import os
 import json
 import requests
 from . import base_dir
+from .models import User, db
 
 dotenv.load_dotenv(base_dir.parent / ".env")
 
-template = """CI22yQEIorbJAQjEtskBCKmdygEIjtHKAQiMnssBCO/yywEItPjLAQie+csBCPj5ywEIx/3LAQii/ssBCL3+ywEIn//LAQ=="""
 
-
-def request_get_user_google(auth_token):
+def is_valid_google_token(auth_token):
     api_key = os.environ.get("FIREBASE_API_KEY")
     request_url = os.environ.get("FIREBASE_REQUEST_USER_URL").format(api_key)
 
-    data = requests.post(
+    google_data = requests.post(
         request_url,
         data=json.dumps({
-            "idToken": api_key
+            "idToken": auth_token
         }),
         headers={
-            "Content-Type": "application/json",
-            "x-client-data": template
+            "content-type": "application/json",
         }
-    ).text
+    ).json()
 
-    return data
+    if google_data.get("users") and len(google_data["users"]) == 1:
+        google_user = google_data["users"][0]
+
+        user = User(name=google_user["displayName"],
+                    email=google_user["email"],
+                    googleId=google_user["localId"],
+                    avatarUrl=google_user["photoUrl"])
+
+        db.session.add(user)
+        try:
+            db.session.commit()
+        # пользователь существует
+        except:
+            print("user exist")
+            pass
+
+        return user
+
+    return False
+
+
+# вызывается, когда текущий токен в бд расходится с полученным
+def update_user_google(data):
+    pass
+
+

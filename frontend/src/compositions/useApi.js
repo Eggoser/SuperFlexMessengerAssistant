@@ -1,5 +1,6 @@
 import axios from "axios"
 import { ref } from 'vue'
+import {UserModule} from '@/modules/userModule'
 
 
 export function useApi(
@@ -10,10 +11,26 @@ export function useApi(
     const baseURL = "http://localhost:5000/api/v1"
     const $axios = axios.create({
         baseURL,
-        withCredentials: false,
-        xsrfHeaderName: "X-XSRF-TOKEN",
-        maxRedirects: 0
+        withCredentials: true,
+        maxRedirects: 0,
+        headers: {
+            // "Access-Control-Allow-Origin": "*",
+            // "Access-Control-Allow-Methods": "*",
+            // "Access-Control-Allow-Headers": "*",
+            "Content-type": "application/json; charset=UTF-8"
+        }
     })
+
+    $axios.interceptors.request.use((config) => {
+        const token = UserModule.token
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
+
+        return config
+    })
+
 
     const result = ref(null);
     const isLoading = ref(false);
@@ -21,7 +38,6 @@ export function useApi(
     const exec = async () => {
         isLoading.value = true;
         error.value = null;
-        console.log("hello world")
         try {
             const response = await $axios(request);
             const valueResponse = await handleResponse(response)
@@ -30,6 +46,7 @@ export function useApi(
         } catch (e) {
             if (e.isAxiosError) {
                 error.value = e
+                console.log("error", e)
             } else {
                 console.log('strange error ', e)
                 error.value = e

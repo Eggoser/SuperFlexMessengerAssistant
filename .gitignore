@@ -10,6 +10,7 @@ frontend/node_modules
 # backend directories
 backend/venv
 backend/.env
+backend/*.sqlite3
 /**/__pycache__
 
 
