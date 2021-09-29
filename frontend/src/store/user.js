@@ -28,10 +28,11 @@ class User extends VuexModule {
     }
 
     @Mutation
-    setTokenCookie({value, expiresIn}){
-        this.token = value
+    setTokenCookie({token, expire}){
+        console.log(token)
+        this.token = token
         const cookie = useCookie()
-        cookie.set("token", value, expiresIn)
+        cookie.set("token", token, expire)
     }
     @Action
     async getToken(){

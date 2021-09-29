@@ -1,14 +1,33 @@
 <template>
-    <Nav />
-    <Chat />
+    <Nav @show_page="setNewPage"/>
+    <ContentView v-if="UserModule.user" :page_number="nowPageGlobal" :update_count="updateCount"/>
 </template>
 
 <script>
 import Nav from '@/components/Nav.vue'
-import Chat from '@/components/Chat.vue'
+import ContentView from '@/components/Content.vue'
+import {UserModule} from '@/store/user'
+import {ref} from 'vue'
 
 export default {
     name: 'App',
-    components: { Nav, Chat }
+    components: {
+        Nav,
+        ContentView
+    },
+    setup(){
+        const nowPageGlobal = ref(1)
+        const updateCount = ref(0)
+        const setNewPage = (e) => {
+            nowPageGlobal.value = e
+            updateCount.value ++
+        }
+        return {
+            nowPageGlobal,
+            updateCount,
+            UserModule,
+            setNewPage
+        }
+    }
 }
 </script>

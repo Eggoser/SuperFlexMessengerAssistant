@@ -14,7 +14,8 @@ export function useApi(
         withCredentials: true,
         maxRedirects: 0,
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            'content-type': 'application/json'
         }
     })
 

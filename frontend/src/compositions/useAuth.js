@@ -1,6 +1,5 @@
 import firebase from 'firebase'
 import {useApi} from '@/compositions/useApi'
-// import {UserModule} from '@/store/user'
 import { ref, onUnmounted, computed, watch } from 'vue'
 import { UserModule } from '@/store/user'
 
@@ -16,36 +15,27 @@ firebase.initializeApp({
 })
 
 const auth = firebase.auth()
-const loginSuccess = ref(false)
+
 
 const sendAuthData = async function(_user) {
-    if (_user){
+    if (!UserModule.token && _user) {
         const {Aa} = _user
-        console.log(UserModule.token)
-        if (!UserModule.token) {
-            const { exec, result, error } = useApi({
-                method: 'POST',
-                url: '/auth/login',
-                data: {
-                    token: Aa
-                },
-                headers: {
-                    'content-type': 'application/json'
-                }
-            }, {}, (data) => {
-                UserModule.setTokenCookie(data.data)
-                UserModule.init()
-                // console.log(UserModule.token)
-            })
-            await exec()
-        }
+        const { exec, result, error } = useApi({
+            method: 'POST',
+            url: '/auth/login',
+            data: {
+                token: Aa
+            },
+        }, {}, (data) => {
+            UserModule.setTokenCookie(data.data)
+            UserModule.init()
+        })
+        await exec()
     }
 }
 
 
 export function useAuth() {
-
-
     auth.onAuthStateChanged(async (_user) => {
         await sendAuthData(_user)
     })
@@ -53,12 +43,7 @@ export function useAuth() {
     const signIn = async () => {
         const googleProvider = new firebase.auth.GoogleAuthProvider()
         await auth.signInWithPopup(googleProvider)
-
-        watch(loginSuccess, () => {
-            console.log("logout")
-            auth.signOut()
-        })
-
+        await auth.signOut()
     }
 
     return { signIn }

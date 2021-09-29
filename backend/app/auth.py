@@ -1,10 +1,10 @@
 import jwt
 import datetime
 from . import secret_key
-from .models import User
 
 
 def encode_token(payload, live_time_minutes=60 * 24):
+    print("encode: ", payload)
     exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=live_time_minutes)
     return jwt.encode({'payload': payload,
                        'exp': exp_time},
@@ -12,4 +12,5 @@ def encode_token(payload, live_time_minutes=60 * 24):
 
 
 def decode_token(token):
+    print("decode: ", token)
     return jwt.decode(token, secret_key, algorithms=["HS256"])["payload"]

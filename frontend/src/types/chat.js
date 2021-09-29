@@ -1,0 +1,4 @@
+class ChatType {
+    id
+
+}

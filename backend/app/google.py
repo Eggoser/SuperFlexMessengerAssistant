@@ -3,7 +3,7 @@ import os
 import json
 import requests
 from . import base_dir
-from .models import User, db
+from . import mongo
 
 dotenv.load_dotenv(base_dir.parent / ".env")
 
@@ -25,26 +25,21 @@ def is_valid_google_token(auth_token):
     if google_data.get("users") and len(google_data["users"]) == 1:
         google_user = google_data["users"][0]
 
-        user = User(name=google_user["displayName"],
-                    email=google_user["email"],
-                    googleId=google_user["localId"],
-                    avatarUrl=google_user["photoUrl"])
+        existing_user = list(mongo["chat_levkovo"].users.find({"googleId": google_user["localId"]}))
+        # existing_user = User.query.filter_by(googleId=google_user["localId"]).first()
 
-        db.session.add(user)
-        try:
-            db.session.commit()
-        # пользователь существует
-        except:
-            print("user exist")
-            pass
+        if existing_user:
+            return existing_user[0]
+
+        user = {
+            "name": google_user["displayName"],
+            "email": google_user["email"],
+            "googleId": google_user["localId"],
+            "avatarUrl": google_user["photoUrl"]
+        }
+
+        mongo["chat_levkovo"].users.insert_one(user)
 
         return user
 
     return False
-
-
-# вызывается, когда текущий токен в бд расходится с полученным
-def update_user_google(data):
-    pass
-
-

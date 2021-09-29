@@ -17,7 +17,7 @@
 
     <div class="bottom">
         <div class="container-sm">
-            <form v-if="isLogin" @submit.prevent="send">
+            <form v-if="UserModule.user" @submit.prevent="send">
                 <input v-model="message" placeholder="Message" required />
                 <button type="submit">
                     <SendIcon />
@@ -29,40 +29,16 @@
 
 <script>
 import { ref, watch, nextTick } from 'vue'
-// import { useChat } from '@/firebase'
-import { useAuth } from '@/compositions/useAuth'
+import {UserModule} from '@/store/user'
 
-import SendIcon from './SendIcon.vue'
 // import Message from './Message.vue'
 
 export default {
-    components: {SendIcon },
+    components: {},
     setup() {
-        const { user, isLogin } = useAuth()
-        // const { messages, sendMessage } = useChat()
-
-        watch(user, () => {
-            console.log(user.value)
-        })
-
-        const bottom = ref(null)
-        // watch(
-        //     messages,
-        //     () => {
-        //         nextTick(() => {
-        //             bottom.value?.scrollIntoView({ behavior: 'smooth' })
-        //         })
-        //     },
-        //     { deep: true }
-        // )
-
-        const message = ref('')
-        const send = () => {
-            // sendMessage(message.value)
-            message.value = ''
+        return {
+            UserModule
         }
-
-        return { user, isLogin, bottom, message, send }
     }
 }
 </script>

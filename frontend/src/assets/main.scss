@@ -1,0 +1,164 @@
+$background-color-absolute-black: #0f0f0f;
+$background-color-black: #212121;
+$background-color-light: #707579;
+$text-color: #aaaaaa;
+$text-color-light: #fff;
+$other-color: #144714;
+$avatar-size: 54px;
+
+
+$transition: .25s ease-in-out;
+
+$telegram-color-top: #82b1ff;
+$telegram-color-bottom: #665fff;
+
+
+h1, h2, h3, h4, h5, h6, p {
+  margin-bottom: 0;
+}
+
+
+.btn-menu {
+  background-color: $background-color-black;
+}
+
+.pr-0 {
+  padding-right: 0 !important;
+}
+
+.pr-1 {
+  padding-right: .25rem !important;
+}
+
+.rounded-4 {
+  border-radius: 0.5rem !important;
+}
+
+.rounded-5 {
+  border-radius: 1rem !important;
+}
+
+.badge {
+  display: block;
+  border-radius: .75rem;
+  font-weight: 500;
+  color: $text-color-light;
+  font-size: .875rem;
+  text-align: center;
+  flex: 0 0 auto;
+  padding: .25rem .5rem;
+  background-color: $background-color-light;
+}
+
+.text-color-background {
+  color: $background-color-light
+}
+
+.text-color-dark {
+  color: $text-color
+}
+
+.text-color-light {
+  color: $text-color-light;
+}
+
+.text-color-other {
+  color: $other-color
+}
+
+.background-absolute-black {
+  background-color: $background-color-absolute-black
+}
+
+.background-black {
+  background-color: $background-color-black;
+}
+
+.background-gray {
+  background-color: $background-color-light;
+}
+
+.standard-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.message__content {
+  color: $text-color-light;
+}
+
+.message-input__field {
+  color: $text-color-light
+}
+
+.message__left {
+  background-color: $background-color-black
+}
+
+.message__right {
+  background-color: $other-color;
+}
+
+body {
+  background-color: $background-color-absolute-black;
+}
+
+.chat-title {
+  line-height: 27px;
+  font-size: 16px;
+}
+
+.chat-subtitle {
+  font-size: 14px;
+  line-height: 27px
+}
+
+.main-logo {
+  height: 32px;
+}
+
+.animated-menu-icon, .animated-menu-icon::before, .animated-menu-icon::after {
+  width: 1.125rem;
+  height: .125rem;
+  border-radius: .125rem;
+  background-color: $text-color;
+  transform: rotate(0);
+}
+
+.animated-menu-icon::before, .animated-menu-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.animated-menu-icon::before {
+  top: -0.3125rem;
+}
+
+.animated-menu-icon::after {
+  top: .3125rem;
+}
+
+
+.avatar-element {
+  color: $text-color-light;
+  width: $avatar-size;
+  height: $avatar-size;
+  line-height: $avatar-size !important;
+  border-radius: 50%;
+  background: linear-gradient(var($telegram-color-top), var($telegram-color-bottom));
+  text-align: center;
+  font-size: calc(1.25rem / 1);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-transform: uppercase;
+  font-weight: 700;
+
+  &__small {
+    width: 38px;
+    height: 38px;
+  }
+}
