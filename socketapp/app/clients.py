@@ -31,7 +31,7 @@ async def echo_clients(websocket, path):
         await websocket.send("hello world")
 
 
-def clients_server():
+def clients_server(ssl_local):
     print("start clients..")
-    server = websockets.serve(echo_clients, "0.0.0.0", 5050, reuse_port=True)
+    server = websockets.serve(echo_clients, "0.0.0.0", 5050, reuse_port=True, ssl=ssl_local)
     return server

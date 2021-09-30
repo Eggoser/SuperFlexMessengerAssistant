@@ -41,3 +41,7 @@ pnpm-debug.log*
 *.sw?
 
 .firebase
+
+
+socketapp/ucabix_com.crt
+socketapp/ucabix_com.key
