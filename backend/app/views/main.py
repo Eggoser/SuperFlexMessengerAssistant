@@ -27,7 +27,7 @@ def send_websocket(*users_id):
     ws.close()
 
 
-@main.route("/api/v1/send_message", methods=["POST"])
+@main.route("/v1/send_message", methods=["POST"])
 @login_required
 def send_message(current_user):
     collection = mongo["chat_levkovo"]
@@ -83,13 +83,13 @@ def send_message(current_user):
     return jsonify("success")
 
 
-@main.route("/api/v1/user")
+@main.route("/v1/user")
 @login_required
 def get_user(current_user):
     return jsonify(current_user)
 
 
-@main.route("/api/v1/chats")
+@main.route("/v1/chats")
 @login_required
 def get_chats(current_user):
     def get_members(members_local):
@@ -102,7 +102,7 @@ def get_chats(current_user):
     return jsonify(data)
 
 
-@main.route("/api/v1/users")
+@main.route("/v1/users")
 @login_required
 def get_users(current_user):
     def get_members(members_local):
@@ -119,7 +119,7 @@ def get_users(current_user):
     return jsonify(new_chats)
 
 
-@main.route("/api/v1/messages", methods=["POST"])
+@main.route("/v1/messages", methods=["POST"])
 @login_required
 def get_messages(current_user):
     # при запросе сообщений поставить флаг прочитано
@@ -134,7 +134,7 @@ def get_messages(current_user):
     return jsonify([])
 
 
-@main.route("/api/v1/auth/login", methods=["POST"])
+@main.route("/v1/auth/login", methods=["POST"])
 def auth_login():
     token = request.json["token"]
 
