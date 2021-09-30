@@ -1,7 +1,5 @@
 import { createApp } from 'vue'
-
 import {store} from './store'
-// import { VueCookieNext } from 'vue-cookie-next'
 
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -15,7 +13,10 @@ import App from './App.vue'
 
 import {beforeLoad} from "@/libs/beforeLoad"
 beforeLoad().then(() => {
-    createApp(App, store).use(store).mount('#app')
+    const app = createApp(App, store)
+
+    // app.use(VModal)
+    app.use(store).mount('#app')
 })
 
 

@@ -2,8 +2,8 @@
     <div>
         <nav class="position-fixed w-100">
             <div class="d-flex justify-content-between background-black">
-                <div class="nav-block">
-                    <div class="animated-menu-icon" @click="burgerMenuLeftController"></div>
+                <div class="nav-block" @click="burgerMenuLeftController">
+                    <div class="animated-menu-icon"></div>
                 </div>
                 
                 <div class="col-5 d-flex justify-content-center align-items-center">

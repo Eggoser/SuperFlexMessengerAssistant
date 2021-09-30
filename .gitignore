@@ -6,17 +6,23 @@ frontend/dist
 frontend/.DS_Store
 frontend/node_modules
 
+/deploy_files
 
 # backend directories
 backend/venv
 backend/.env
+backend/deploy.py
 backend/*.sqlite3
 backend/mongo.txt
 /**/__pycache__
 
 
+socketapp/venv
+socketapp/.env
+
 # local env files
 /**/.env.*
+/**/.env
 .env.*.local
 
 # Log files

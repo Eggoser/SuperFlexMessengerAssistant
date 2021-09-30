@@ -1,16 +1,19 @@
 <template>
-    <div class="mt-3" v-if="showChatList">
-        <ChatName
-            v-for="item in fetchedChats"
-            :key="item.id"
-            :item="item"
-            @set_chat_page="setChatPage"
-        />
+    <div class="d-flex">
+        <div class="mt-3 w-100" :class="showChat ? 'chat-block-max d-md-block d-none': ''">
+            <ChatName
+                v-for="item in fetchedChats"
+                :key="item.id"
+                :item="item"
+                @set_chat_page="setChatPage"
+            />
+        </div>
+        <div class="w-100" v-if="showChat">
+            <SingleChatPage @change_view="changeView"
+                :second-user="chatUserObject"
+            />
+        </div>
     </div>
-    <SingleChatPage
-        v-else
-        :second-user="chatUserObject"
-    />
 </template>
 
 <script>
@@ -25,13 +28,19 @@ export default {
     components: { ChatName, SingleChatPage },
     
     setup(){
-        const showChatList = ref(true)
+        const showChat = ref(false)
         const chatUserObject = ref({})
         
         const { exec, result, error } = useApi({
             method: 'GET',
             url: '/chats',
         }, {})
+        
+        
+        const changeView = () => {
+            showChat.value = false
+            exec()
+        }
         
         exec()
         
@@ -40,14 +49,15 @@ export default {
         })
         
         const setChatPage = (e) => {
-            showChatList.value = false
+            showChat.value = true
             chatUserObject.value = e
         }
         
         return {
             UserModule,
             fetchedChats,
-            showChatList,
+            showChat,
+            changeView,
             chatUserObject,
             setChatPage
         }
@@ -56,5 +66,7 @@ export default {
 </script>
 
 <style>
-
+.chat-block-max {
+    max-width: 400px;
+}
 </style>

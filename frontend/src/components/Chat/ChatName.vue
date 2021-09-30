@@ -6,7 +6,9 @@
                     <img :src="item.member.avatarUrl" class="avatar-element" alt/>
                     <div class="px-3">
                         <h3 class="text-color-light chat-title">{{ item.member.name }}</h3>
-                        <p class="text-color-dark chat-subtitle">{{ item.last_message.content }}</p>
+                        <p class="text-color-dark chat-subtitle">{{
+                                item.last_message.content.length > 22 ?
+                                item.last_message.content.slice(0, 22) + '...' : item.last_message.content }}</p>
                     </div>
                 </div>
 <!--                <div class="d-flex justify-content-center align-items-center col-1">-->

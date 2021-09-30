@@ -1,7 +1,7 @@
 <template>
     <div class="message-input__container background-absolute-black">
         <div class="message-input">
-            <form class="w-100 d-flex justify-content-between" @submit.prevent="submitForm">
+            <form :style="'width: ' + chatWidth + 'px'" class="d-flex justify-content-between" @submit.prevent="submitForm">
                 <div class="w-100">
                     <input
                         type="text"
@@ -19,18 +19,29 @@
 </template>
 
 <script>
-import {ref, watch, toRefs} from 'vue'
+import {ref, watch, computed} from 'vue'
 import { useApi } from '@/compositions/useApi'
 
 export default {
     props: {
-        item: Object
+        item: Object,
+    },
+    mounted() {
+        this.editWidth()
+        window.onresize = () => {
+            this.editWidth()
+        }
     },
     setup(props){
+        const chatWidth = ref(0)
         const formValue = ref("")
         
+        const editWidth = () => {
+            const el = document.getElementById("chat")
+            chatWidth.value = el ? el.offsetWidth : 1
+        }
+        
         const submitForm = (e) => {
-            console.log(props)
             if (formValue.value){
                 const {exec, result, error} = useApi({
                     method: "POST",
@@ -51,7 +62,9 @@ export default {
         
         return {
             submitForm,
-            formValue
+            formValue,
+            editWidth,
+            chatWidth
         }
     }
 }

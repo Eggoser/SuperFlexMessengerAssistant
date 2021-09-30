@@ -21,7 +21,6 @@ export default {
         title: String
     },
     setup(props){
-        console.log(props.src)
         return {
             UserModule
         }

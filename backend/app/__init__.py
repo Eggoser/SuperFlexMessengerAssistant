@@ -1,6 +1,7 @@
 from flask import Flask
 # from flask_sqlalchemy import SQLAlchemy
 from pymongo import MongoClient
+from websocket import WebSocket
 from flask_cors import CORS
 import pathlib
 import os
@@ -14,6 +15,8 @@ load_dotenv(base_dir.parent / ".env")
 cors = CORS()
 secret_key = os.environ.get("SECRET_KEY")
 mongo = MongoClient(os.environ.get("MONGO_URI"))
+ws_server = os.environ.get("WEBSOCKET_CONNECT")
+ws_secret = os.environ.get("SECRET_KEY_WEBSOCKET")
 
 
 def init_app():

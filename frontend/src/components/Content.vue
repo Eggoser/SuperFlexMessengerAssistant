@@ -18,21 +18,19 @@ export default {
     },
     
     watch: {
-    update_count: function(newwal, oldwal) {
-        const old_page_number = this.page_number
-        this.page_number_global = 32
-        console.log('lick')
-        this.$nextTick(() => {
-            this.page_number_global = old_page_number
-        })
-    }
+        // при изменении update_count
+        update_count: function(newwal, oldwal) {
+            const old_page_number = this.page_number
+            this.page_number_global = 32
+            console.log('lick')
+            this.$nextTick(() => {
+                this.page_number_global = old_page_number
+            })
+        }
     },
     
     setup(props){
         const page_number_global = ref(1)
-        
-        watch(props.update_count, )
-        
         
         return {
             UserModule,
