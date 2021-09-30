@@ -8,7 +8,7 @@ export function useApi(
     options,
     handleResponse = async (data) => data.data
 ){
-    const baseURL = "http://localhost:5000/api/v1"
+    const baseURL = process.env.NODE_ENV === 'production' ? "http://chat.ucabix.com/api/v1" : "http://localhost:5000/api/v1"
     const $axios = axios.create({
         baseURL,
         withCredentials: true,
