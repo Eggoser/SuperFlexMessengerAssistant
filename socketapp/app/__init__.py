@@ -12,7 +12,7 @@ load_dotenv(base_dir.parent / ".env")
 
 secret_key = os.environ.get("SECRET_KEY")
 max_neg_value = float(os.environ.get("MAX_NEG_VALUE"))
-debug = os.environ.get("DEBUG")
+debug = int(os.environ.get("DEBUG"))
 mongo = motor.motor_asyncio.AsyncIOMotorClient(os.environ.get("MONGO_URI"))
 
 print("SECRET KEY:", secret_key)
