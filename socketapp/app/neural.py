@@ -6,6 +6,11 @@ import string
 from nltk.sentiment import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
 from sentimental import Sentimental
+import requests
+import bs4
+import urllib.parse
+import json
+
 
 # nltk.download([
 #     "names",
@@ -28,13 +33,28 @@ stop_words_en = stopwords.words('english')
 stop_words_rus = stopwords.words('russian')
 
 
-def translate_dict(value):
-    return {
-        "neg": value["negative"],
-        "neu": value["score"],
-        "pos": value["positive"],
-        "compound": value["comparative"]
+def get_translate(phrase):
+    headers = {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; '
+                      'rv:20.0) Gecko/20100101 Firefox/20.0'
     }
+    data = {
+        "format": "text",
+        "from": "rus",
+        "input": phrase,
+        "options": {
+            "origin": "contextweb",
+            "languageDetection": True
+        },
+        "languageDetection": True,
+        "origin": "contextweb",
+        "to": 'eng'
+    }
+
+    response = requests.post("https://api.reverso.net/translate/v1/translation", headers=headers, data=json.dumps(data))
+    return response.json()["translation"][0]
 
 
 def get_language_key_code(message: str) -> str:
@@ -47,40 +67,27 @@ def get_language_key_code(message: str) -> str:
 def get_message_preprocessed_data_list(written_text_by_user: str) -> dict:
     language = get_language_key_code(written_text_by_user)
 
+    if language != "en":
+        written_text_by_user = get_translate(written_text_by_user)
+        language = "en"
+
     written_text_by_user = nltk.word_tokenize(written_text_by_user)
 
-    # Тут вся предобработка для английского
-    if language == 'en':
-        # Удаление stopwords на английском
-        filtered_written_text_by_user = " ".join([word for word in written_text_by_user if word not in stop_words_en])
 
-        # Лемматизация для английского
-        doc = nlp(filtered_written_text_by_user)
-        full_ready_text_by_user = " ".join([token.lemma_ for token in doc])
 
-    # Тут вся предобработка для русского
-    else:
-        # Удаление stopwords на русском
-        filtered_written_text_by_user = [word for word in written_text_by_user
-                                         if word not in stop_words_rus]
+    # Удаление stopwords на английском
+    filtered_written_text_by_user = " ".join([word for word in written_text_by_user if word not in stop_words_en])
 
-        # Лемматизация для русского
-        full_ready_text_by_user = []
-        for word in filtered_written_text_by_user:
-            russian_normalized = morph.parse(word)[0]
-            full_ready_text_by_user.append(russian_normalized.normal_form)
+    # Лемматизация для английского
+    doc = nlp(filtered_written_text_by_user)
+    full_ready_text_by_user = " ".join([token.lemma_ for token in doc])
 
-        # Соединяем в целый текст для дальнейшей работы
-        full_ready_text_by_user = " ".join(full_ready_text_by_user)
 
     full_ready_text_by_user = nltk.sent_tokenize(full_ready_text_by_user)
 
     # Модель предсказывания для английского
-    if language == 'en':
-        return sia.polarity_scores(" ".join(full_ready_text_by_user))
+    return sia.polarity_scores(" ".join(full_ready_text_by_user))
 
-    # Модель для русского языка
-    return translate_dict(sent.analyze(" ".join(full_ready_text_by_user)))
 
 
 if __name__ == "__main__":

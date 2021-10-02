@@ -8,8 +8,8 @@
                 <img :src="secondUser.avatarUrl" class="avatar-element avatar-element__small me-3" alt="">
                 <h6 class="text-color-light">{{ secondUser.name }}</h6>
             </div>
-            <div class="col-3 chat-header__block pt-2 pb-3">
-                <Progress :height="50" name="Карма"/>
+            <div class="chat-header__block pt-2 pb-3">
+<!--                <Progress :height="50" name="Карма"/>-->
             </div>
         </div>
     </div>
@@ -27,6 +27,7 @@
             :content="item.content"
             :name="item.googleId === UserModule.user.googleId ? UserModule.user.name : secondUser.name"
             :right="item.googleId === UserModule.user.googleId"
+            :labels="item.predicts_for_message"
         />
     </div>
     <div class="p-4 my-2"></div>
@@ -50,7 +51,7 @@ import {computed, ref, watch} from 'vue'
 
 
 export default {
-    components: { Message, MessageInput, Progress, Modal, Placeholder },
+    components: { Message, MessageInput, Modal, Placeholder },
     props: {
         secondUser: Object
     },

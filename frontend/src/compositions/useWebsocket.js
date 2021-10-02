@@ -34,7 +34,7 @@ export function connectSocket(func= null){
         console.log("[+] Get websocket message")
 
         const {type, data} = raw
-        console.log(type)
+        // console.log(type)
         types[type](data)
     }
 }
@@ -46,7 +46,7 @@ const types = {
     messages(data) {
         const {googleId, messages} = data
 
-        console.log(googleId)
+        console.log(data)
 
         UserModule.setMessageById({googleId, messages})
     },
@@ -57,7 +57,7 @@ const types = {
         UserModule.setUsers(data)
     },
     message(data){
-        console.log(data)
+        // console.log(data)
         if (data.type === "success"){
             UserModule.setModalContent(null)
         }
