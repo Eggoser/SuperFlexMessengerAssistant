@@ -80,6 +80,9 @@ async def send_message(current_user, googleIdSecond, message, ignore=False):
         match = predict_message.get("neg") - predict_message.get("pos") / 2 - predict_message.get(
             "pos") / 4 - predict_message.get("neu") / 6
 
+        with open("value.txt", "w") as log:
+            log.write(str(match))
+
         if match > max_neg_value:
             return await jsonify({"googleId": googleIdSecond, "message": message, "type": "error"}, "message"), False
 
