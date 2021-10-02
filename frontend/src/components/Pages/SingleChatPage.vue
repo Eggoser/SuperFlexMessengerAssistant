@@ -13,7 +13,14 @@
             </div>
         </div>
     </div>
-    <div class="mx-2 position-relative" id="chat">
+    <div class="mx-2 position-relative mt-3" id="chat">
+        <div class="d-flex justify-content-center align-items-center w-100 placeholder-height-100 overflow-hidden" v-if="!fetchedMessages">
+            <Placeholder
+                title="Сообщений нет"
+                class="text-color-dark"
+            />
+        </div>
+        
         <Message
             v-for="item in fetchedMessages"
             :key="item.id"
@@ -24,20 +31,26 @@
     </div>
     <div class="p-4 my-2"></div>
     <MessageInput :item="secondUser"/>
+    <Modal
+        v-if="showModalFlag"
+        :item="showModalFlag"
+        @modal_keypress="modal_keypress($event)"
+    />
 </template>
 
 <script>
+import Placeholder from '@/components/Chat/Placeholder.vue'
 import Progress from '@/components/Chat/Progress.vue'
 import Message from '@/components/Chat/Message.vue'
+import Modal from "@/components/Modal.vue"
 import MessageInput from '@/components/Chat/MessageInput.vue'
 import { UserModule } from '@/store/user'
+import {useWebsocket} from '@/compositions/useWebsocket'
 import {computed, ref, watch} from 'vue'
-import { useApi } from '@/compositions/useApi'
-import { useWebsocket } from '@/compositions/useWebsocket'
 
 
 export default {
-    components: { Message, MessageInput, Progress },
+    components: { Message, MessageInput, Progress, Modal, Placeholder },
     props: {
         secondUser: Object
     },
@@ -45,53 +58,54 @@ export default {
     methods: {
         change_view(){
             this.$emit("change_view")
-            // this.$vfm.show("test")
-            
-            console.log("chat view")
         }
     },
     
+    
+    mounted() {
+        setTimeout(this.scrollChats, 300)
+    },
+    
     setup(props){
-        const { exec, result, error } = useApi({
-            method: 'POST',
-            url: '/messages',
-            data: {
-                googleId: props.secondUser.googleId
+        const {sendMessage} = useWebsocket()
+    
+        const modal_keypress = (val) => {
+            const value = val.value
+        
+            if (value === 1){
+                const {googleId, message} = UserModule.modalContent
+            
+                sendMessage({googleId, message}, true)
             }
-        }, {})
+            UserModule.setModalContent(null)
+        }
+        
         const scrollChats = () => {
             setTimeout(() => {
                 window.scrollBy(0, 10000)
             }, 100)
         }
-        exec()
-    
-        watch(result, scrollChats)
         
-    
         const fetchedMessages = computed(() => {
-            return result.value
+            return UserModule.messages[props.secondUser.googleId]
         })
-    
-    
-        const connection = useWebsocket()
-    
-        connection.onopen = (event) => {
-            connection.send(JSON.stringify({
-                googleId: UserModule.user.googleId
-            }))
-        }
-    
-        connection.onmessage = (event) => {
-            console.log("message")
-            exec()
-            scrollChats()
-        }
+        
+        
+        const showModalFlag = computed(() => {
+            return UserModule.modalContent
+        })
+        
+        
+        // важно ставить watch после функции
+        watch(fetchedMessages, scrollChats)
         
         
         return {
             UserModule,
-            fetchedMessages
+            fetchedMessages,
+            showModalFlag,
+            scrollChats,
+            modal_keypress
         }
     }
 };

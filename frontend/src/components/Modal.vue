@@ -12,10 +12,11 @@
 </template>
 
 <script>
+
 export default {
     methods: {},
-    mount () {
-        this.show()
+    props: {
+        item: Object
     }
 }
 </script>
@@ -24,6 +25,8 @@ export default {
     .main-modal {
         &__container {
             position: fixed;
+            left: 0;
+            top: 0;
             display: flex;
             width: 100%;
             height: 100%;

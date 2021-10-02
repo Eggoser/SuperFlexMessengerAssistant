@@ -8,14 +8,15 @@ export function useApi(
     options,
     handleResponse = async (data) => data.data
 ){
-    const baseURL = process.env.NODE_ENV === 'production' ? "https://chat.ucabix.com/api/v1" : "http://localhost:5000/api/v1"
+    const baseURL = process.env.NODE_ENV === 'production' ? "https://chat.ucabix.com/api/v1" : "http://localhost:5000/v1"
     const $axios = axios.create({
         baseURL,
         withCredentials: true,
         maxRedirects: 0,
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            "Access-Control-Allow-Origin": "*"
         }
     })
 

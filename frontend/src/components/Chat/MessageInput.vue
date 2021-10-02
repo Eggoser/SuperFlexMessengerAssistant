@@ -10,7 +10,8 @@
                         class="message-input__field background-black w-full px-3 py-2 rounded-4"
                         spellcheck="false"
                         autocomplete="false"
-                    />
+                    >
+                    
                 </div>
                 <img class="message-input__send" @click="submitForm" :src="require('@/assets/img/send.png')" alt>
             </form>
@@ -21,6 +22,7 @@
 <script>
 import {ref, watch, computed} from 'vue'
 import { useApi } from '@/compositions/useApi'
+import { useWebsocket } from '@/compositions/useWebsocket'
 
 export default {
     props: {
@@ -36,6 +38,8 @@ export default {
         const chatWidth = ref(0)
         const formValue = ref("")
         
+        const {send, sendMessage} = useWebsocket()
+        
         const editWidth = () => {
             const el = document.getElementById("chat")
             chatWidth.value = el ? el.offsetWidth : 1
@@ -43,16 +47,7 @@ export default {
         
         const submitForm = (e) => {
             if (formValue.value){
-                const {exec, result, error} = useApi({
-                    method: "POST",
-                    url: "/send_message",
-                    data: {
-                        message: formValue.value,
-                        googleId: props.item.googleId
-                    }
-                })
-                
-                exec()
+                sendMessage({googleId: props.item.googleId, message: formValue.value})
                 
                 formValue.value = ""
             }

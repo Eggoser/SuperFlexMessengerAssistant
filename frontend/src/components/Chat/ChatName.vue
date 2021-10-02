@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded-4 mt-1 background-black mx-1" @click="$emit('set_chat_page', item.member)">
+    <div class="rounded-4 mt-1 background-black mx-1 cursor-pointer" @click="$emit('set_chat_page', item.member)">
         <div class="container p-2">
             <div class="d-flex px-2 py-2 align-items-center justify-content-between">
                 <div class="d-flex">
@@ -20,9 +20,6 @@
 </template>
 
 <script>
-import { UserModule } from '@/store/user'
-
-
 export default {
     components: { },
     props: {
@@ -31,7 +28,7 @@ export default {
 
     setup(){
         return {
-            UserModule
+            // UserModule
         }
     }
 };

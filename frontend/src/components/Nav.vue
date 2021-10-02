@@ -2,9 +2,11 @@
     <div>
         <nav class="position-fixed w-100">
             <div class="d-flex justify-content-between background-black">
-                <div class="nav-block" @click="burgerMenuLeftController">
+                <div class="nav-block" @click="burgerMenuLeftController" v-if="UserModule.user">
                     <div class="animated-menu-icon"></div>
                 </div>
+                
+                <div class="nav-block" v-else></div>
                 
                 <div class="col-5 d-flex justify-content-center align-items-center">
                     <img :src="require('@/assets/img/logo.png')" class="main-logo" alt="">

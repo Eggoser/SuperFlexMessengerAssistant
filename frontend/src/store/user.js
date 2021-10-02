@@ -3,9 +3,11 @@ import {
     VuexModule,
     Mutation,
     Action,
-    Module
-} from 'vuex-module-decorators';
+    Module,
+    MutationAction
+} from 'vuex-module-decorators'
 import {plainToClass} from "class-transformer";
+import {connectSocket} from '@/compositions/useWebsocket'
 import {UserType} from '@/types/user'
 import { store } from '.';
 import { useApi } from '@/compositions/useApi'
@@ -16,6 +18,30 @@ import { useCookie } from '@/compositions/useCookie'
 class User extends VuexModule {
     user = null
     token = null
+    modalContent = null
+    messages = {}
+    chats = []
+    users = []
+
+    @Mutation
+    setUsers(value){
+        this.users = value
+    }
+
+    @Mutation
+    setMessageById({googleId, messages}){
+        this.messages[googleId] = messages
+    }
+
+    @Mutation
+    setModalContent(value){
+        this.modalContent = value
+    }
+
+    @Mutation
+    setChats(value){
+        this.chats = value
+    }
 
     @Mutation
     setUser(value) {
@@ -25,11 +51,11 @@ class User extends VuexModule {
     @Mutation
     setToken(value){
         this.token = value
+        connectSocket()
     }
 
     @Mutation
     setTokenCookie({token, expire}){
-        console.log(token)
         this.token = token
         const cookie = useCookie()
         cookie.set("token", token, expire)
@@ -64,7 +90,6 @@ class User extends VuexModule {
         await exec()
 
         if (!error.value) {
-            console.log("setting user")
             this.setUser(result.value)
         } else {
             this.setUser(null)

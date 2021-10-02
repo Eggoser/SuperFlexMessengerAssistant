@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import {store} from './store'
+import VueApexCharts from "vue3-apexcharts";
+
 
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -14,8 +16,8 @@ import App from './App.vue'
 import {beforeLoad} from "@/libs/beforeLoad"
 beforeLoad().then(() => {
     const app = createApp(App, store)
+    app.use(VueApexCharts)
 
-    // app.use(VModal)
     app.use(store).mount('#app')
 })
 
