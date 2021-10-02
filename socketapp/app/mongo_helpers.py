@@ -72,11 +72,11 @@ async def send_message(current_user, googleIdSecond, message, ignore=False):
     if not ignore:
         if debug:
             predict_message = {'neg': 1, 'neu': 0, 'pos': 0, 'compound': 0}
-            match = predict_message.get("neg") - predict_message.get("pos") / 2 - predict_message.get(
-                "pos") / 4 - predict_message.get("neu") / 6
         else:
             predict_message = get_message_preprocessed_data_list(message)
-            match = 0
+
+        match = predict_message.get("neg") - predict_message.get("pos") / 2 - predict_message.get(
+            "pos") / 4 - predict_message.get("neu") / 6
 
         if match > max_neg_value:
             return await jsonify({"googleId": googleIdSecond, "message": message, "type": "error"}, "message"), False
@@ -90,8 +90,12 @@ async def send_message(current_user, googleIdSecond, message, ignore=False):
             "predicts_for_message": predict_message
         })
 
+        print("create chat")
+
     else:
         current_chat["messages"] += [message_dict]
+
+        print("update chat")
 
         await collection.chats.update_one({"_id": current_chat["_id"]}, {"$set": {"messages": current_chat["messages"]}})
 
