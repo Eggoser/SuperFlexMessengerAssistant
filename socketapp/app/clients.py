@@ -10,6 +10,8 @@ from .decorators import login_required
 async def channel_get_messages(current_user, ws, params, as_id=None):
     user_id = current_user["googleId"]
 
+    print("GEt messages:", current_user["name"], params["googleId"])
+
     try:
         encoded_messages = await get_messages(user_id, params["googleId"])
         await ws.send(encoded_messages)
@@ -29,7 +31,6 @@ async def channel_send_message(current_user, ws, params):
         await ws.send(returned_data)
 
         if executed:
-            # это в конце
             update_dictionary[user_id].value = True
             update_dictionary[user_second_id].value = True
     except (websockets.exceptions.ConnectionClosedOK, websockets.exceptions.ConnectionClosedError):

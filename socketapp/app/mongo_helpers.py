@@ -58,30 +58,35 @@ async def send_message(current_user, googleIdSecond, message, ignore=False):
         second_user["googleId"]
     ]
 
+    print(members[1]["name"], members[0]["name"])
+
     message_dict = {
         "googleId": current_user["googleId"],
         "content": message,
         "date": datetime.datetime.now()
     }
-    current_chat = await collection.chats.find_one({"members_id": {"$in": members_id}})
+
+    current_chat = await collection.chats.find_one({"members_id": {"$all": members_id}})
     # current_chat = await collection.chats.delete_many({"members_id": {"$in": members_id}})
 
+    # print(current_chat["messages"])
+
     # обработка ML
-    predict_message = {}
+    # predict_message = {}
 
-    if not ignore:
-        if debug:
-            predict_message = {'neg': 1, 'neu': 0, 'pos': 0, 'compound': 0}
-        else:
-            predict_message = get_message_preprocessed_data_list(message)
-
-        match = predict_message.get("neg") - predict_message.get("pos") / 2 - predict_message.get(
-            "pos") / 4 - predict_message.get("neu") / 6
-
-        print(match)
-
-        if match > max_neg_value:
-            return await jsonify({"googleId": googleIdSecond, "message": message, "type": "error"}, "message"), False
+    # if not ignore:
+    #     if debug:
+    #         predict_message = {'neg': 0, 'neu': 0, 'pos': 0, 'compound': 0}
+    #     else:
+    #         predict_message = get_message_preprocessed_data_list(message)
+    #
+    #     match = predict_message.get("neg") - predict_message.get("pos") / 2 - predict_message.get(
+    #         "pos") / 4 - predict_message.get("neu") / 6
+    #
+    #     print(match)
+    #
+    #     if match > max_neg_value:
+    #         return await jsonify({"googleId": googleIdSecond, "message": message, "type": "error"}, "message"), False
 
     # конец обработки ML
     if not current_chat:
@@ -89,7 +94,7 @@ async def send_message(current_user, googleIdSecond, message, ignore=False):
             "messages": [message_dict],
             "members": members,
             "members_id": members_id,
-            "predicts_for_message": predict_message
+            # "predicts_for_message": predict_message
         })
 
         print("create chat")
@@ -98,6 +103,8 @@ async def send_message(current_user, googleIdSecond, message, ignore=False):
         current_chat["messages"] += [message_dict]
 
         print("update chat")
+
+        print(current_chat["_id"])
 
         await collection.chats.update_one({"_id": current_chat["_id"]}, {"$set": {"messages": current_chat["messages"]}})
 
