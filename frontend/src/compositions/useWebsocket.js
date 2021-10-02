@@ -46,6 +46,8 @@ const types = {
     messages(data) {
         const {googleId, messages} = data
 
+        console.log(googleId)
+
         UserModule.setMessageById({googleId, messages})
     },
     chats(data){

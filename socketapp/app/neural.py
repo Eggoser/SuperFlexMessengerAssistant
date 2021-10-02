@@ -28,6 +28,15 @@ stop_words_en = stopwords.words('english')
 stop_words_rus = stopwords.words('russian')
 
 
+def translate_dict(value):
+    return {
+        "neg": value["negative"],
+        "neu": value["score"],
+        "pos": value["positive"],
+        "compound": value["comparative"]
+    }
+
+
 def get_language_key_code(message: str) -> str:
     for symbol in message.split()[0]:
         if symbol.lower() not in string.ascii_lowercase:
@@ -71,7 +80,7 @@ def get_message_preprocessed_data_list(written_text_by_user: str) -> dict:
         return sia.polarity_scores(" ".join(full_ready_text_by_user))
 
     # Модель для русского языка
-    return sent.analyze(" ".join(full_ready_text_by_user))
+    return translate_dict(sent.analyze(" ".join(full_ready_text_by_user)))
 
 
 if __name__ == "__main__":

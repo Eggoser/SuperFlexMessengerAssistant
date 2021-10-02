@@ -21,6 +21,7 @@
 
 <script>
 import {ref, watch, computed} from 'vue'
+import {UserModule} from '@/store/user'
 import { useApi } from '@/compositions/useApi'
 import { useWebsocket } from '@/compositions/useWebsocket'
 
@@ -38,7 +39,7 @@ export default {
         const chatWidth = ref(0)
         const formValue = ref("")
         
-        const {send, sendMessage} = useWebsocket()
+        const {sendMessage} = useWebsocket()
         
         const editWidth = () => {
             const el = document.getElementById("chat")
@@ -47,6 +48,8 @@ export default {
         
         const submitForm = (e) => {
             if (formValue.value){
+                console.log(props.item.googleId)
+                console.log(UserModule.chats)
                 sendMessage({googleId: props.item.googleId, message: formValue.value})
                 
                 formValue.value = ""

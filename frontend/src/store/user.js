@@ -30,6 +30,7 @@ class User extends VuexModule {
 
     @Mutation
     setMessageById({googleId, messages}){
+        // console.log(googleId, this.messages)
         this.messages[googleId] = messages
     }
 
