@@ -59,7 +59,7 @@ export default {
                 opacity: 1,
             },
     
-            colors: ["#30f615", "#FFB801", "#c60303"],
+            colors: ["#FFB801", "#c60303", "#30f615"],
     
             dataLabels: {
                 enabled: false,

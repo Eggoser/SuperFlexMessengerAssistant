@@ -63,22 +63,16 @@ async def send_message(current_user, googleIdSecond, message, ignore=False):
     # current_chat = await collection.chats.delete_many({"members_id": {"$in": members_id}})
 
     # обработка ML
-    predict_message = {}
+    if debug:
+        predict_message = {'neg': 0.2, 'neu': 0.3, 'pos': 0.5, 'compound': 0}
+    else:
+        predict_message = get_message_preprocessed_data_list(message)
 
-    if not ignore:
-        if debug:
-            predict_message = {'neg': 0.2, 'neu': 0.3, 'pos': 0.5, 'compound': 0}
-        else:
-            predict_message = get_message_preprocessed_data_list(message)
+    match = predict_message.get("neg") - predict_message.get("pos") / 2 - predict_message.get(
+        "pos") / 4 - predict_message.get("neu") / 6
 
-        match = predict_message.get("neg") - predict_message.get("pos") / 2 - predict_message.get(
-            "pos") / 4 - predict_message.get("neu") / 6
-
-        with open("value.txt", "w") as log:
-            log.write(str(match))
-
-        if match > max_neg_value:
-            return await jsonify({"googleId": googleIdSecond, "message": message, "type": "error"}, "message"), False
+    if not ignore and match > max_neg_value:
+        return await jsonify({"googleId": googleIdSecond, "message": message, "type": "error"}, "message"), False
 
     message_dict = {
         "googleId": current_user["googleId"],
